@@ -13,7 +13,7 @@
     "element-plus": "^1.0.2-beta.31",
     "element-ui": "^2.15.0",
     "swiper": "^6.4.10",
-    "vee-validate": "^3.0.4",
+    "vee-validate": "^4.1.14",
     "vue": "^3.0.0",
     "vue-awesome-swiper": "^4.1.1",
     "vue-i18n": "^8.22.4",

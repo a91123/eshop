@@ -1,26 +1,28 @@
 <template>
-  <el-dialog v-model="dialogVisible"
-    :append-to-body="true"
-    :close-on-click-modal="true"
-    width="30%"
-    :modal="true"
-    :show-close="true"
-    :center="true">
+  <el-dialog :title="title" :width="dialogWidth" v-model="dialogTableVisible">
     <slot></slot>
   </el-dialog>
-
 </template>
 <script>
-import { defineComponent, computed } from 'vue'
+import { defineComponent, ref } from 'vue'
 export default defineComponent({
   props: {
-    toggledailog: Boolean
+    title: String
   },
-  setup (props) {
-    const dialogVisible = computed(() => { return props.toggledailog })
-    // const dialogVisible = ref(context.props.toggleDialog || false)
+  setup (props, context) {
+    const dialogWidth = ref('450px')
+    const dialogTableVisible = ref(false)
+    const displayDialog = () => {
+      dialogTableVisible.value = true
+    }
+    const displayNoneDialog = () => {
+      dialogTableVisible.value = false
+    }
     return {
-      dialogVisible
+      dialogTableVisible,
+      displayDialog,
+      displayNoneDialog,
+      dialogWidth
     }
   }
 });
