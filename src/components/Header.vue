@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navbar</a>
+    <a class="navbar-brand" href="#">TOMSESHOP</a>
     <button
       class="navbar-toggler"
       ref="toggleButton"
@@ -59,104 +59,57 @@
       </ul>
       <div class="nav-right">
         <i class="el-icon-user-solid"></i>
-        <el-badge :value="buyCartAmount" class="item">
+        <el-badge :value="buyCartAmount" class="badge">
           <router-link to="/BuyCart">
             <i class="el-icon-shopping-cart-1"></i>
           </router-link>
         </el-badge>
-
         <span class="welcome" v-if="user.name">
           你好,{{user.name}}
           <span class="login-out" @click="handleLogout">登出</span>
         </span>
         <span v-else class="login-out" @click="handleDialog">登入</span>
+        <span>
+          <router-link to="/signUp">註冊</router-link>
+        </span>
       </div>
     </div>
   </nav>
-  <diaogModel ref="dialog" :destroy-on-close="true" :append-to-body="true" title="Login">
-    <Form v-slot="{ errors }" @submit="onSubmit">
-      <label for="email">email</label>
-      <div class="form-group">
-        <Field
-          name="email"
-          v-model="email"
-          type="email"
-          class="form-control"
-          :rules="isEmailRules"
-        />
-        <span class="errorColor">{{ errors.email }}</span>
-      </div>
-      <div class="form-group">
-        <label for="password">密碼</label>
-        <Field
-          name="password"
-          v-model="password"
-          class="form-control"
-          type="password"
-          :rules="isPasswordLength"
-        />
-        <span class="errorColor">{{ errors.password }}</span>
-      </div>
-      <button type="submit" class="btn btn-primary">送出</button>
-    </Form>
+  <diaogModel :destroy-on-close="true" :append-to-body="true" title="Login" ref="dialog">
+    <login-dailog :close="close">
+      <button @click="close" type="submit" class="btn btn-primary">送出</button>
+    </login-dailog>
   </diaogModel>
 </template>
 <script>
 import { computed, defineComponent, ref } from 'vue'
-import { useForm, Field, Form } from 'vee-validate'
 import { useStore } from 'vuex'
 import diaogModel from '../components/dialog.vue'
-import { useRouter } from 'vue-router'
-const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+import loginDailog from '../components/loginFrom.vue'
 export default defineComponent({
   props: {
     user: Object
   },
   components: {
     diaogModel,
-    Field,
-    Form
+    loginDailog
   },
-  setup (props) {
-    const router = useRouter()
+  setup () {
     const store = useStore()
-    const email = ref()
-    const password = ref()
-    const { handleSubmit } = useForm()
     const toggleButton = ref(null)
     const isOpen = ref(false)
     const dialog = ref(null)
     const rwdOpen = ref(false)
-    // const cart = ref(JSON.parse(localStorage.getItem('cart')))
     const buyCartAmount = computed(() => { return store.state.buyCartAmount })
-    // watch(buyCartAmount, () => {
-    //   buyCartAmount.value = cart.value.length
-    //   console.log(cart.value.length)
-    // })
-    const isEmailRules = (value) => {
-      if (!emailReg.test(value)) {
-        return '請輸入正確的email'
-      }
-      return true
-    }
-    const isPasswordLength = (value) => {
-      if (!value || value.length < 6) {
-        return '密碼至少要六個字!'
-      }
-      return true
-    }
     const handleLogout = () => {
       store.commit('logout')
     }
     const handleDialog = () => {
-      dialog.value.displayDialog()
+      dialog.value.open()
     }
-    const onSubmit = handleSubmit(() => {
-      store.dispatch('getUserLogin', { email: email.value, password: password.value }).then(res => {
-        dialog.value.displayNoneDialog()
-        router.push('/')
-      })
-    })
+    const close = () => {
+      dialog.value.close()
+    }
     const toggleOpen = () => {
       isOpen.value = !isOpen.value
     }
@@ -172,13 +125,9 @@ export default defineComponent({
       toggleRwdOpen,
       dialog,
       handleDialog,
-      isEmailRules,
-      isPasswordLength,
-      onSubmit,
-      email,
-      password,
       handleLogout,
-      buyCartAmount
+      buyCartAmount,
+      close
     }
   }
 });
@@ -188,6 +137,7 @@ export default defineComponent({
   display: block;
 }
 .nav-right {
+  margin-right: 20px;
   span {
     padding-left: 15px;
   }
@@ -196,6 +146,7 @@ export default defineComponent({
   }
   i {
     padding-left: 15px;
+    font-size: 18px;
   }
   .login-out {
     cursor: pointer;

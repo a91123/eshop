@@ -1,13 +1,10 @@
 <template>
-  <eshop-header :user="user">
-    <div>123456789</div>
-  </eshop-header>
-  <div></div>
+  <eshop-header :user="user"></eshop-header>
   <router-view></router-view>
 </template>
 <script>
 import EshopHeader from './components/Header.vue'
-import { defineComponent, computed, onMounted } from 'vue'
+import { defineComponent, computed, onMounted, watch, getCurrentInstance } from 'vue'
 import { useStore } from 'vuex'
 import axios from 'axios'
 export default defineComponent({
@@ -15,6 +12,8 @@ export default defineComponent({
     EshopHeader
   },
   setup () {
+    const { proxy } = getCurrentInstance()
+    const error = computed(() => { return store.state.error })
     const store = useStore()
     const token = computed(() => { return store.state.token })
     const currentUser = computed(() => { return store.state.user })
@@ -24,7 +23,17 @@ export default defineComponent({
         store.dispatch('fetchCurrentUser')
       }
     })
-
+    watch(() => error.value.status, () => {
+      const { status, message } = error.value
+      if (status && message) {
+        proxy.$message({
+          message: message,
+          type: 'error',
+          showClose: true,
+          duration: 1000
+        })
+      }
+    })
     store.dispatch('fetchCurrentUser')
     return {
       user: currentUser

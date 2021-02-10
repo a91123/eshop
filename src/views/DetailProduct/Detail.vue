@@ -31,11 +31,12 @@
   </div>
 </template>
 <script>
-import { defineComponent, computed, ref } from 'vue'
+import { defineComponent, computed, ref, getCurrentInstance } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 export default defineComponent({
   setup () {
+    const { proxy } = getCurrentInstance()
     const count = ref(1)
     const cart = JSON.parse(localStorage.getItem('cart'))
     const buyList = [{}]
@@ -49,6 +50,13 @@ export default defineComponent({
       if (count.value > 1) {
         count.value -= 1
       }
+    }
+    const open = () => {
+      proxy.$message({
+        message: '成功加入購物車!!',
+        type: 'success',
+        showClose: true
+      })
     }
     const setItemToBuycart = () => {
       buyList[0].item = list.value.title
@@ -65,6 +73,7 @@ export default defineComponent({
       }
       localStorage.setItem('cart', JSON.stringify(newCart))
       store.commit('getProductCart')
+      open()
     }
     const handleRouter = () => {
       router.push('/BuyCart')
@@ -82,7 +91,8 @@ export default defineComponent({
       handleMin,
       buyList,
       setItemToBuycart,
-      handleRouter
+      handleRouter,
+      open
     }
   }
 });

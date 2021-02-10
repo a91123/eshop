@@ -5,24 +5,26 @@
 </template>
 <script>
 import { defineComponent, ref } from 'vue'
+// import { useStore } from 'vuex'
 export default defineComponent({
   props: {
     title: String
   },
   setup (props, context) {
+    // const store = useStore()
     const dialogWidth = ref('450px')
     const dialogTableVisible = ref(false)
-    const displayDialog = () => {
-      dialogTableVisible.value = true
-    }
-    const displayNoneDialog = () => {
+    const close = () => {
       dialogTableVisible.value = false
+    }
+    const open = () => {
+      dialogTableVisible.value = true
     }
     return {
       dialogTableVisible,
-      displayDialog,
-      displayNoneDialog,
-      dialogWidth
+      dialogWidth,
+      open,
+      close
     }
   }
 });

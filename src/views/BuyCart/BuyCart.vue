@@ -1,138 +1,102 @@
 <template>
   <div class="container">
-    <div class="row item-header">
-      <div class="header-item">商品名稱</div>
-      <div class="price">單價</div>
-      <div class="amount">數量</div>
-      <div class="operate">移除</div>
-    </div>
+    <payment-step :active="active"></payment-step>
+    <cart-header v-if="active===0||active===2"></cart-header>
   </div>
-  <div class="container" v-if="myCart.length>0">
-    <div class="row item-body" v-for="(item,index) in myCart" :key="item.id">
-      <div class="product-detail">
-        <img :src="item.image" alt />
-        {{item.item}}
-      </div>
-      <div class="price">{{item.price}}</div>
-      <div class="amount">
-        <button @click="handleMin(item,index)">-</button>
-        {{item.amount}}
-        <button @click="handlePlus(item,index)">+</button>
-      </div>
-      <div class="operate" @click="delProduct(index)">
-        <i class="el-icon-close"></i>
-      </div>
-    </div>
+  <div class="container">
+    <cart-body ref="cartRef" v-if="active===0" @next="next" :active="active"></cart-body>
   </div>
-  <div class="container" v-else>沒有商品喔</div>
-  <div class="container total" v-if="myCart.length>0">
-    <div class="counts">總計${{total}}</div>
-    <button>結帳去</button>
+  <signup-from ref="order" :user="user" v-if="active===1"></signup-from>
+  <order-detail v-if="active===2"></order-detail>
+  <div class="paymentButton">
+    <button v-if="active!==0 && active<3" @click="pre">上一步</button>
+    <button v-if="active===1" @click="checkOrder">確認個人資料</button>
+    <button v-if="active===2" @click="sendOrder">送出訂單</button>
   </div>
 </template>
 <script>
-import { defineComponent, computed } from 'vue'
+import { computed, defineComponent, ref, reactive } from 'vue'
+import SignupFrom from '../signUp/signUpFrom.vue'
+import CartHeader from './component/CartHeader.vue'
+import OrderDetail from './component/Order-Detail'
+import PaymentStep from './component/PaymentStep'
+import CartBody from './component/CartBody.vue'
+import axios from 'axios'
 import { useStore } from 'vuex'
 export default defineComponent({
+  components: {
+    CartHeader,
+    OrderDetail,
+    PaymentStep,
+    CartBody,
+    SignupFrom
+  },
   setup () {
+    const order = ref()
     const store = useStore()
-    const cart = JSON.parse(localStorage.getItem('cart'))
-    const total = computed(() => {
-      let sum = 0
-      myCart.value.forEach((item) => { sum += (item.price * item.amount) })
-      return sum
+    const cartRef = ref(null)
+    const active = ref(0)
+    const orderPayload = reactive({})
+    const user = computed(() => {
+      return store.state.user
     })
-    const myCart = computed(() => { return store.state.ProductCart })
-    const handlePlus = (item, index) => {
-      item.amount += 1
-      store.commit('handleAmount', { amount: item.amount, index })
+    const cart = computed(() => {
+      return store.state.ProductCart
+    })
+    const next = () => {
+      active.value++
+      console.log(active.value)
     }
-    const handleMin = (item, index) => {
-      item.amount -= 1
-      store.commit('handleAmount', { amount: item.amount, index })
+    const sendOrder = () => {
+      // active.value++
+      const payload = [JSON.stringify(cart.value), { orderPayload }]
+      console.log(store.getters.getTotal)
+      axios.post('order', payload).then((res) => {
+        console.log(res)
+      })
+      console.log([{ cart: cart.value, total: store.getters.getTotal }, { orderPayload }])
     }
-    const delProduct = (index) => {
-      myCart.value.splice(index, 1)
-      localStorage.setItem('cart', JSON.stringify(myCart.value))
-      store.state.buyCartAmount = myCart.value.length
+    const checkOrder = () => {
+      console.log(cartRef)
+      active.value++
+      orderPayload.email = order.value.email
+      orderPayload.name = order.value.name
+      orderPayload.address = order.value.address
+      orderPayload.phone = '0' + order.value.phone
+      orderPayload.uid = user.value.uid
+      console.log(orderPayload)
+    }
+    const pre = () => {
+      active.value--
+      if (active.value < 0) {
+        active.value = 0
+      }
     }
     store.commit('getProductCart')
     return {
-      handlePlus,
-      handleMin,
-      delProduct,
-      myCart,
-      cart,
-      total
+      active,
+      next,
+      pre,
+      order,
+      checkOrder,
+      user,
+      sendOrder,
+      cartRef
     }
   }
 });
 </script>
 <style scoped lang="scss">
-img {
-  width: 60px;
-  height: 100%;
-}
-.item-header {
-  align-self: center;
-  text-align: center;
-  line-height: 30px;
-  margin: 15px auto;
-  padding-left: 15px;
-  border: 1px solid rgb(158, 156, 156);
-  border-radius: 3px;
-  div {
-    width: 16%;
-  }
-  .header-item {
-    width: 50%;
-    text-align: left;
-  }
-}
-.item-body {
-  align-items: center;
-  border-radius: 3px;
-  border: 1px solid rgb(158, 156, 156);
-  margin: 15px auto;
-  text-align: center;
-  div {
-    width: 16%;
-  }
-  .product-detail {
-    display: flex;
-    width: 50%;
-    font-size: 15px;
-    align-items: center;
-    img {
-      margin-right: 15px;
-    }
-  }
-  .amount button {
-    width: 15%;
-    background: white;
-    border-radius: 3px;
-  }
-  .operate {
-    i {
-      cursor: pointer;
-    }
-  }
-}
-.total {
-  width: 100%;
+.paymentButton {
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  line-height: 30px;
-  .counts {
-    font-size: 18px;
-  }
+  justify-content: center;
   button {
+    margin-top: 15px;
     margin-left: 15px;
     background-color: #212529;
     color: white;
-    width: 15%;
     font-weight: bold;
+    width: 10%;
   }
 }
 </style>

@@ -12,13 +12,21 @@ export default createStore({
   state: {
     ProductList: [],
     DetailList: [],
+    dialogTableVisible: false,
     ProductCart: localStorage.getItem('cart') || [],
     categoryProduct: [],
     user: { isLogin: false },
+    error: { status: false },
     token: localStorage.getItem('token') || '',
     buyCartAmount: JSON.parse(localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')).length : ''
   },
   mutations: {
+    setError (state, e) {
+      state.error = e
+    },
+    handleDialogTableVisible (state, status) {
+      state.dialogTableVisible = status
+    },
     getProductList (state, data) {
       state.ProductList = data.rows
       state.categoryProduct = data.rows
@@ -61,19 +69,6 @@ export default createStore({
       state.ProductCart = newMycartDisplay
       localStorage.setItem('cart', JSON.stringify(state.ProductCart))
       state.buyCartAmount = state.ProductCart.length
-      // if (cart) {
-      //   cart.filter((item) => {
-      //     const index = state.ProductCart.findIndex((value) => value.id === item.id)
-      //     if (index === -1) {
-      //       state.ProductCart.push(item)
-      //     } else {
-      //       console.log(item)
-      //       // state.ProductCart[index].amount += item.amount
-      //     }
-      //   })
-      //   // localStorage.setItem('cart', JSON.stringify(state.ProductCart))
-      //   // state.buyCartAmount = state.ProductCart.length
-      // }
     },
     handleAmount (state, payload) {
       const { amount, index } = payload
@@ -86,13 +81,19 @@ export default createStore({
       }
     },
     fetchCurrentUser (state, data) {
-      console.log(data, '我是')
       state.user = { isLogin: true, ...data }
     },
     logout (state) {
       state.user = { isLogin: false }
       localStorage.removeItem('token')
       delete axios.defaults.headers.common.authorization
+    }
+  },
+  getters: {
+    getTotal: (state) => {
+      let sum = 0
+      state.ProductCart.forEach((item) => { sum += (item.price * item.amount) })
+      return sum
     }
   },
   actions: {
