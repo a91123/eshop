@@ -52,6 +52,9 @@ export default createStore({
     getDetailList (state, data) {
       state.DetailList = data[0]
     },
+    handleBuyCartAmount (state) {
+      state.buyCartAmount = ''
+    },
     getProductCart (state) {
       const cart = JSON.parse(localStorage.getItem('cart')) || []
       let newMycartDisplay = []

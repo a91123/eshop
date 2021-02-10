@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" :width="dialogWidth" v-model="dialogTableVisible">
+  <el-dialog :title="title" :width="width" v-model="dialogTableVisible">
     <slot></slot>
   </el-dialog>
 </template>
@@ -8,7 +8,8 @@ import { defineComponent, ref } from 'vue'
 // import { useStore } from 'vuex'
 export default defineComponent({
   props: {
-    title: String
+    title: String,
+    width: String
   },
   setup (props, context) {
     // const store = useStore()
@@ -30,4 +31,7 @@ export default defineComponent({
 });
 </script>
 <style scoped>
+.order {
+  width: 80%;
+}
 </style>

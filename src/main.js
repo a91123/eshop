@@ -30,6 +30,7 @@ axios.interceptors.response.use((config) => {
   const { error } = e.response.data
   // 攔截到失敗也要關掉
   loading.close()
+  // 把error設定給 message讓彈出框好使用
   store.commit('setError', { status: true, message: error })
   return Promise.reject(error)
 }

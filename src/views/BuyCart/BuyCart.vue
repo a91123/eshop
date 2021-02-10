@@ -15,12 +15,13 @@
   </div>
 </template>
 <script>
-import { computed, defineComponent, ref, reactive } from 'vue'
+import { computed, defineComponent, ref, reactive, getCurrentInstance } from 'vue'
 import SignupFrom from '../signUp/signUpFrom.vue'
 import CartHeader from './component/CartHeader.vue'
 import OrderDetail from './component/Order-Detail'
 import PaymentStep from './component/PaymentStep'
 import CartBody from './component/CartBody.vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { useStore } from 'vuex'
 export default defineComponent({
@@ -32,6 +33,8 @@ export default defineComponent({
     SignupFrom
   },
   setup () {
+    const { proxy } = getCurrentInstance()
+    const router = useRouter()
     const order = ref()
     const store = useStore()
     const cartRef = ref(null)
@@ -49,10 +52,18 @@ export default defineComponent({
     }
     const sendOrder = () => {
       // active.value++
-      const payload = [JSON.stringify(cart.value), { orderPayload }]
+      const payload = [JSON.stringify({ cart: cart.value, total: store.getters.getTotal }), { orderPayload }]
       console.log(store.getters.getTotal)
       axios.post('order', payload).then((res) => {
-        console.log(res)
+        proxy.$message({
+          message: res.data.msg,
+          type: 'success',
+          showClose: true,
+          duration: 1000
+        })
+        localStorage.removeItem('cart')
+        store.commit('handleBuyCartAmount')
+        router.push('/')
       })
       console.log([{ cart: cart.value, total: store.getters.getTotal }, { orderPayload }])
     }

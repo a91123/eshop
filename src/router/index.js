@@ -3,6 +3,7 @@ import Home from '../views/Home/Home.vue'
 import Detail from '@/views/DetailProduct/Detail.vue'
 import BuyCart from '@/views/BuyCart/BuyCart.vue'
 import singUp from '../views/signUp/signUp.vue'
+import MyOrder from '../views/MyOrder/MyOrder.vue'
 const routes = [
   {
     path: '/',
@@ -13,6 +14,11 @@ const routes = [
     path: '/detail/:id',
     name: 'detail',
     component: Detail
+  },
+  {
+    path: '/MyOrder/:id',
+    name: 'MyOrder',
+    component: MyOrder
   },
   {
     path: '/signUp',

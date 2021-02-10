@@ -58,16 +58,13 @@
         </li>
       </ul>
       <div class="nav-right">
-        <i class="el-icon-user-solid"></i>
+        <router-link v-if="user.name" :to="`/MyOrder/${user.uid}`">我的訂單</router-link>
         <el-badge :value="buyCartAmount" class="badge">
           <router-link to="/BuyCart">
             <i class="el-icon-shopping-cart-1"></i>
           </router-link>
         </el-badge>
-        <span class="welcome" v-if="user.name">
-          你好,{{user.name}}
-          <span class="login-out" @click="handleLogout">登出</span>
-        </span>
+        <span v-if="user.name" class="login-out" @click="handleLogout">登出</span>
         <span v-else class="login-out" @click="handleDialog">登入</span>
         <span>
           <router-link to="/signUp">註冊</router-link>
@@ -75,7 +72,13 @@
       </div>
     </div>
   </nav>
-  <diaogModel :destroy-on-close="true" :append-to-body="true" title="Login" ref="dialog">
+  <diaogModel
+    :destroy-on-close="true"
+    width="400px"
+    :append-to-body="true"
+    title="Login"
+    ref="dialog"
+  >
     <login-dailog :close="close">
       <button @click="close" type="submit" class="btn btn-primary">送出</button>
     </login-dailog>
@@ -94,12 +97,13 @@ export default defineComponent({
     diaogModel,
     loginDailog
   },
-  setup () {
+  setup (props) {
     const store = useStore()
     const toggleButton = ref(null)
     const isOpen = ref(false)
     const dialog = ref(null)
     const rwdOpen = ref(false)
+    console.log(typeof props.user.isLogin)
     const buyCartAmount = computed(() => { return store.state.buyCartAmount })
     const handleLogout = () => {
       store.commit('logout')
