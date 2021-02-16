@@ -1,0 +1,81 @@
+.item-body {
+  align-items: center;
+  border-radius: 3px;
+  border: 1px solid rgb(158, 156, 156);
+  margin: 15px auto;
+  text-align: center;
+  div {
+    width: 15%;
+  }
+  .product-detail {
+    display: flex;
+    width: 40%;
+    font-size: 15px;
+    align-items: center;
+
+    img {
+      margin-right: 15px;
+    }
+  }
+
+  .amount {
+    background: white;
+
+    .countinput {
+      @media (max-width: 992px) {
+        width: 100%;
+      }
+
+      width: 50%;
+      margin: 0 auto;
+      text-align: center;
+
+      div {
+        width: 20px;
+        cursor: pointer;
+      }
+
+      .min {
+        border-right: 1px solid black;
+      }
+
+      .plus {
+        border-left: 1px solid black;
+      }
+    }
+  }
+
+  .operate {
+    i {
+      cursor: pointer;
+    }
+  }
+}
+
+.total {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  line-height: 30px;
+
+  .counts {
+    font-size: 18px;
+  }
+
+  button {
+    @media (max-width: 992px) {
+      width: 25%;
+    }
+
+    margin-left: 15px;
+    background-color: #212529;
+    color: white;
+    width: 15%;
+    font-weight: bold;
+
+    a:visited {
+      color: white;
+    }
+  }
+}

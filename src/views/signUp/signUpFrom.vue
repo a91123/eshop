@@ -1,51 +1,68 @@
 <template>
-  <Form class="from-container container" v-slot="{ errors }" @submit="onSubmit">
-    <div class="form-group">
-      <label for="name">姓名</label>
-      <Field type="text" name="name" :rules="isRequires" v-model="name" class="form-control" />
-      <span>{{ errors.name }}</span>
+  <div class="container">
+    <div class="from-container">
+      <Form v-slot="{ errors }" @submit="onSubmit">
+        <div class="form-group">
+          <label for="name">姓名</label>
+          <Field type="text" name="name" :rules="isRequires" v-model="name" class="form-control" />
+          <span>{{ errors.name }}</span>
+        </div>
+        <div class="form-group">
+          <label for="email">email</label>
+          <Field
+            type="email"
+            name="email"
+            :rules="isEmailRules"
+            v-model="email"
+            class="form-control"
+          />
+          <span>{{ errors.email }}</span>
+        </div>
+        <div v-if="!user" class="form-group">
+          <label for="password">password</label>
+          <Field
+            type="password"
+            name="password"
+            autocomplete="on"
+            :rules="isPasswordLength"
+            v-model="password"
+            class="form-control"
+          />
+          <span>{{ errors.password }}</span>
+        </div>
+        <div v-if="!user" class="form-group">
+          <label for="passwordAgain">再次輸入密碼</label>
+          <Field
+            type="password"
+            autocomplete="on"
+            name="passwordAgain"
+            :rules="isPasswordAgain"
+            v-model="passwordAgain"
+            class="form-control"
+          />
+          <span>{{ errors.passwordAgain }}</span>
+        </div>
+        <div class="form-group">
+          <label for="address">地址</label>
+          <Field
+            type="text"
+            name="address"
+            :rules="isRequires"
+            v-model="address"
+            class="form-control"
+          />
+          <span>{{ errors.address }}</span>
+        </div>
+        <div class="form-group">
+          <label for="phone">手機</label>
+          <Field type="tel" name="phone" :rules="isPhone" v-model="phone" class="form-control" />
+          <span>{{ errors.phone }}</span>
+        </div>
+        <!-- 如果沒登入 改為註冊按鈕 發送ajax 有登入改成用 送出按鈕 -->
+        <button v-if="!user" type="submit" class="btn btn-primary">送出</button>
+      </Form>
     </div>
-    <div class="form-group">
-      <label for="email">email</label>
-      <Field type="email" name="email" :rules="isEmailRules" v-model="email" class="form-control" />
-      <span>{{ errors.email }}</span>
-    </div>
-    <div v-if="!user" class="form-group">
-      <label for="password">password</label>
-      <Field
-        type="password"
-        name="password"
-        autocomplete="on"
-        :rules="isPasswordLength"
-        v-model="password"
-        class="form-control"
-      />
-      <span>{{ errors.password }}</span>
-    </div>
-    <div v-if="!user" class="form-group">
-      <label for="passwordAgain">再次輸入密碼</label>
-      <Field
-        type="password"
-        autocomplete="on"
-        name="passwordAgain"
-        :rules="isPasswordAgain"
-        v-model="passwordAgain"
-        class="form-control"
-      />
-      <span>{{ errors.passwordAgain }}</span>
-    </div>
-    <div class="form-group">
-      <label for="address">地址</label>
-      <Field type="text" name="address" :rules="isRequires" v-model="address" class="form-control" />
-      <span>{{ errors.address }}</span>
-    </div>
-    <div class="form-group">
-      <label for="phone">手機</label>
-      <Field type="tel" name="phone" :rules="isPhone" v-model="phone" class="form-control" />
-      <span>{{ errors.phone }}</span>
-    </div>
-    <button v-if="!user" type="submit" class="btn btn-primary">送出</button>
-  </Form>
+  </div>
   <slot v-if="user"></slot>
 </template>
 <script>
@@ -143,14 +160,3 @@ export default defineComponent({
   }
 });
 </script>
-<style lang="scss" scoped>
-.from-container {
-  margin-top: 60px;
-  width: 50%;
-}
-.form-group {
-  span {
-    color: red;
-  }
-}
-</style>

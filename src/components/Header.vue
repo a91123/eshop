@@ -1,6 +1,6 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">TOMSESHOP</a>
+  <nav class="navheader navbar navbar-expand-lg navbar-light bg-light">
+    <router-link to="/">TOMSESHOP</router-link>
     <button
       class="navbar-toggler"
       ref="toggleButton"
@@ -64,7 +64,7 @@
             <i class="el-icon-shopping-cart-1"></i>
           </router-link>
         </el-badge>
-        <span v-if="user.name" class="login-out" @click="handleLogout">登出</span>
+        <span v-if="user.isLogin" class="login-out" @click="handleLogout">登出</span>
         <span v-else class="login-out" @click="handleDialog">登入</span>
         <span>
           <router-link to="/signUp">註冊</router-link>
@@ -72,13 +72,7 @@
       </div>
     </div>
   </nav>
-  <diaogModel
-    :destroy-on-close="true"
-    width="400px"
-    :append-to-body="true"
-    title="Login"
-    ref="dialog"
-  >
+  <diaogModel :destroy-on-close="true" :append-to-body="true" title="Login" ref="dialog">
     <login-dailog :close="close">
       <button @click="close" type="submit" class="btn btn-primary">送出</button>
     </login-dailog>
@@ -87,6 +81,7 @@
 <script>
 import { computed, defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 import diaogModel from '../components/dialog.vue'
 import loginDailog from '../components/loginFrom.vue'
 export default defineComponent({
@@ -98,15 +93,16 @@ export default defineComponent({
     loginDailog
   },
   setup (props) {
+    const router = useRouter()
     const store = useStore()
     const toggleButton = ref(null)
     const isOpen = ref(false)
     const dialog = ref(null)
     const rwdOpen = ref(false)
-    console.log(typeof props.user.isLogin)
     const buyCartAmount = computed(() => { return store.state.buyCartAmount })
     const handleLogout = () => {
       store.commit('logout')
+      router.push('/')
     }
     const handleDialog = () => {
       dialog.value.open()
@@ -139,22 +135,6 @@ export default defineComponent({
 <style scoped lang="scss">
 .displayBlock {
   display: block;
-}
-.nav-right {
-  margin-right: 20px;
-  span {
-    padding-left: 15px;
-  }
-  a:visited {
-    color: black;
-  }
-  i {
-    padding-left: 15px;
-    font-size: 18px;
-  }
-  .login-out {
-    cursor: pointer;
-  }
 }
 </style>
 <style>

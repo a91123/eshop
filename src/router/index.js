@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home/Home.vue'
-import Detail from '@/views/DetailProduct/Detail.vue'
+import Detail from '@/views/Detail.vue'
 import BuyCart from '@/views/BuyCart/BuyCart.vue'
 import singUp from '../views/signUp/signUp.vue'
-import MyOrder from '../views/MyOrder/MyOrder.vue'
+import MyOrder from '@/views/MyOrder.vue'
+import store from '@/store'
+import axios from 'axios'
 const routes = [
   {
     path: '/',
@@ -18,12 +20,14 @@ const routes = [
   {
     path: '/MyOrder/:id',
     name: 'MyOrder',
-    component: MyOrder
+    component: MyOrder,
+    meta: { requiredLogin: true }
   },
   {
     path: '/signUp',
     name: 'signUp',
-    component: singUp
+    component: singUp,
+    meta: { redirectAlreadyLogin: true }
   },
   {
     path: '/BuyCart',
@@ -40,10 +44,39 @@ const routes = [
       import(/* webpackChunkName: "about" */ '../views/About.vue')
   }
 ]
-
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
-
 export default router
+router.beforeEach((to, from, next) => {
+  const { user } = store.state
+  const { token } = store.state
+  const { redirectAlreadyLogin, requiredLogin } = to.meta
+  if (user.isLogin === false) {
+    if (token) {
+      axios.defaults.headers.common.authorization = token
+      store.dispatch('fetchCurrentUser').then(() => {
+        if (redirectAlreadyLogin) {
+          next('/')
+        } else {
+          next()
+        }
+      }).catch(e => {
+        store.commit('logout')
+      })
+    } else {
+      if (requiredLogin) {
+        next('/')
+      } else {
+        next()
+      }
+    }
+  } else {
+    if (redirectAlreadyLogin) {
+      next('/')
+    } else {
+      next()
+    }
+  }
+})

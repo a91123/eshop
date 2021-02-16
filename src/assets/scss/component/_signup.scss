@@ -1,0 +1,20 @@
+.nav-right {
+  margin-right: 20px;
+  span {
+    padding-left: 15px;
+  }
+  a:visited {
+    color: black;
+  }
+  i {
+    padding-left: 15px;
+    font-size: 18px;
+  }
+  .login-out {
+    cursor: pointer;
+  }
+}
+.from-container {
+  margin: 0 auto;
+  width: 100%;
+}

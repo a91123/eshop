@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <payment-step :active="active"></payment-step>
+    <payment-step class="mt-5" :active="active"></payment-step>
     <cart-header v-if="active===0||active===2"></cart-header>
   </div>
   <div class="container">
@@ -97,17 +97,3 @@ export default defineComponent({
   }
 });
 </script>
-<style scoped lang="scss">
-.paymentButton {
-  display: flex;
-  justify-content: center;
-  button {
-    margin-top: 15px;
-    margin-left: 15px;
-    background-color: #212529;
-    color: white;
-    font-weight: bold;
-    width: 10%;
-  }
-}
-</style>

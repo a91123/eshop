@@ -1,0 +1,15 @@
+.swiper-container {
+  @media (max-width: 992px) {
+    height: 600px;
+  }
+  @media (max-width: 767px) {
+    height: 300px;
+  }
+  height: 700px;
+  //header高度
+  .swiper-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}

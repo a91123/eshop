@@ -1,0 +1,140 @@
+.detail-container {
+  max-width: 80%;
+  margin: 50px auto;
+
+  .image-container {
+    img {
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+  .main {
+    justify-content: space-around;
+  }
+
+  .right-detail {
+    position: relative;
+    .product-title {
+      margin-top: 15px;
+      padding-bottom: 10px;
+
+      padding-left: 15px;
+      position: relative;
+      @media (max-width: 992px) {
+        // font-size: 30px;
+      }
+    }
+
+    .product-title::before {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 2px;
+      height: 36px;
+      width: 10px;
+      background-color: rgb(65, 78, 100);
+    }
+    .product-title::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      border-bottom: 1px solid rgb(41, 40, 40);
+    }
+    .descript {
+      margin: 20px 0px;
+      font-size: 18px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .price {
+      position: relative;
+      text-align: right;
+      color: red;
+      margin: 20px 0px;
+      .twd {
+        font-size: 15px;
+      }
+
+      .count {
+        font-size: 30px;
+      }
+    }
+
+    .price::after {
+      position: absoult;
+      display: block;
+      margin: 15px 0px;
+      content: '';
+      width: 100%;
+      height: 0px;
+      border-bottom: 1px solid rgb(233, 216, 216);
+      bottom: 0px;
+    }
+    .chose {
+      display: flex;
+      width: 100%;
+      @media (max-width: 992px) {
+        width: 100%;
+        justify-content: center;
+      }
+      margin: 30px auto;
+      justify-content: center;
+    }
+    .buy-count {
+      border: solid 1px rgb(59, 58, 58);
+      border-radius: 3px;
+      line-height: 40px;
+      width: 40%;
+      @media (max-width: 992px) {
+        width: 50%;
+      }
+      display: flex;
+      font-size: 18px;
+      height: 40px;
+      align-self: center;
+      .buy-i {
+        width: 33%;
+        cursor: pointer;
+        background-color: #343a40;
+        text-align: center;
+
+        i {
+          color: white;
+        }
+      }
+      .buy-number {
+        width: 64%;
+        align-self: center;
+        text-align: center;
+        margin: 0px 20px;
+      }
+    }
+    .buy-now {
+      display: flex;
+      button {
+        justify-content: center;
+        align-items: center;
+        background-color: #343a40;
+        color: white;
+        width: 90%;
+        margin: 30px auto;
+        font-weight: bold;
+        margin-top: 50px;
+        @media (max-width: 992px) {
+          margin: 0px auto;
+          width: 100%;
+        }
+        a {
+          text-decoration: none;
+        }
+        a:visited {
+          color: white;
+        }
+      }
+    }
+  }
+}

@@ -1,9 +1,12 @@
 <template>
-  <swiper :autoplay="swiperoptions.autoplay"
+  <swiper
+    :autoplay="swiperoptions.autoplay"
     :pagination="swiperoptions.pagination"
-    :loop="swiperoptions.loop">
-    <swiper-slide v-for="(list,index) in Product"
-      :key="index"><img :src="list"></swiper-slide>
+    :loop="swiperoptions.loop"
+  >
+    <swiper-slide v-for="(list,index) in Product" :key="index">
+      <img :src="list" />
+    </swiper-slide>
   </swiper>
 </template>
 <script>
@@ -43,14 +46,3 @@ export default defineComponent({
   }
 });
 </script>
-<style scoped lang="scss">
-.swiper-container{
-width: 100%;
-height: 600px;
-.swiper-wrapper img{
-width: 100%;
-height: 100%;
-object-fit: cover;
-}
-}
-</style>

@@ -7,10 +7,6 @@ import signupFrom from './signUpFrom.vue'
 export default defineComponent({
   components: {
     signupFrom
-  },
-  setup () {
-
   }
-
 });
 </script>

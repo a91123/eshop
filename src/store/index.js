@@ -8,7 +8,7 @@ const postData = async (url, payload) => {
   const { data } = await axios.post(url, payload)
   return data
 }
-export default createStore({
+const store = createStore({
   state: {
     ProductList: [],
     DetailList: [],
@@ -28,8 +28,7 @@ export default createStore({
       state.dialogTableVisible = status
     },
     getProductList (state, data) {
-      state.ProductList = data.rows
-      state.categoryProduct = data.rows
+      state.ProductList = data
     },
     getProductCategory (state, category) {
       if (category !== 0) {
@@ -40,8 +39,6 @@ export default createStore({
       } else {
         state.categoryProduct = state.ProductList
       }
-
-      console.log(state.categoryProduct)
     },
     getUserLogin (state, data) {
       const token = data.token
@@ -60,7 +57,7 @@ export default createStore({
       let newMycartDisplay = []
       for (let i = 0; i < cart.length; i++) {
         const index = newMycartDisplay.findIndex(
-          (value) => value.id === cart[i].id
+          (value) => value.id === cart[i].id && value.size === cart[i].size
         )
         if (index !== -1) {
           newMycartDisplay[index].amount += cart[i].amount
@@ -100,15 +97,16 @@ export default createStore({
     }
   },
   actions: {
-    getProductList ({ commit }) {
-      getData('/product').then(res => {
+    getProductList ({ commit }, payload) {
+      const { page } = payload
+      const { category } = payload
+      getData(`/product/${category}/?page=${page}`).then(res => {
         commit('getProductList', res)
       })
     },
     getDetailList ({ commit }, cid) {
-      getData(`/product/${cid}`).then(res => {
+      getData(`/detail/${cid}`).then(res => {
         commit('getDetailList', res)
-        console.log(res)
       })
     },
     fetchCurrentUser ({ commit }) {
@@ -119,9 +117,9 @@ export default createStore({
     getUserLogin ({ commit, dispatch }, payload) {
       return postData('/login', payload).then(res => {
         commit('getUserLogin', res) // setToken
-        console.log(res)
         return dispatch('fetchCurrentUser')
       })
     }
   }
 })
+export default store

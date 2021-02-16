@@ -1,27 +1,36 @@
 <template>
   <eshop-header :user="user"></eshop-header>
-  <router-view></router-view>
+  <div class="down" :style="{minHeight: Height+'px'}">
+    <router-view></router-view>
+  </div>
+  <eshop-footer></eshop-footer>
 </template>
 <script>
 import EshopHeader from './components/Header.vue'
-import { defineComponent, computed, onMounted, watch, getCurrentInstance } from 'vue'
+import EshopFooter from './components/footer.vue'
+import { defineComponent, computed, onMounted, watch, getCurrentInstance, ref } from 'vue'
 import { useStore } from 'vuex'
-import axios from 'axios'
+// import axios from 'axios'
 export default defineComponent({
   components: {
-    EshopHeader
+    EshopHeader,
+    EshopFooter
   },
   setup () {
     const { proxy } = getCurrentInstance()
     const error = computed(() => { return store.state.error })
     const store = useStore()
-    const token = computed(() => { return store.state.token })
+    const Height = ref(0)
+    // const token = computed(() => { return store.state.token })
     const currentUser = computed(() => { return store.state.user })
     onMounted(() => {
-      if (!currentUser.value.isLogin && token.value) {
-        axios.defaults.headers.common.authorization = token.value
-        store.dispatch('fetchCurrentUser')
-      }
+      // 解決foot 內容不夠撐開的問題 class down = 讓down minheight = 最少等於整個body - (footer + header高度 -down的整體下降70)
+      Height.value = document.body.clientHeight - 50
+      window.onresize = () => { Height.value = document.documentElement.clientHeight - 50 }
+      // if (!currentUser.value.isLogin && token.value) {
+      //   axios.defaults.headers.common.authorization = token.value
+      //   store.dispatch('fetchCurrentUser')
+      // }
     })
     watch(() => error.value.status, () => {
       const { status, message } = error.value
@@ -34,20 +43,19 @@ export default defineComponent({
         })
       }
     })
-    store.dispatch('fetchCurrentUser')
     return {
-      user: currentUser
+      user: currentUser,
+      Height
     }
   }
 });
 </script>
+
 <style lang="scss">
-html {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  body {
-    background-color: #fdfdfd;
-  }
+@import "./assets/scss/component/all.scss";
+</style>
+<style scoped>
+.down {
+  padding-top: 70px;
 }
 </style>

@@ -2,9 +2,10 @@
   <div class="container" v-if="myCart.length===0&&active===0">沒有商品喔</div>
   <div class="row item-body" v-for="(item,index) in myCart" :key="item.id">
     <div class="product-detail">
-      <img :src="item.image" alt />
+      <img :src="item.image" />
       {{item.item}}
     </div>
+    <div class="size">{{item.size}}</div>
     <div class="price">{{item.price}}</div>
     <div class="amount">
       <div class="countinput" :class="active===0 ? 'borders' : '' ">
@@ -23,12 +24,13 @@
   </div>
 </template>
 <script>
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, getCurrentInstance } from 'vue'
 import { useStore } from 'vuex'
 export default defineComponent({
   emits: ['next'],
   props: ['active', 'order'],
   setup (props, context) {
+    const { proxy } = getCurrentInstance()
     const myCart = computed(() => { return store.state.ProductCart })
     const store = useStore()
     const handlePlus = (item, index) => {
@@ -36,7 +38,18 @@ export default defineComponent({
       store.commit('handleAmount', { amount: item.amount, index })
     }
     const handleNext = () => {
-      context.emit('next')
+      const user = store.state.user
+      console.log(typeof user.isLogin, user.isLogin === true)
+      if (user.isLogin === true) {
+        context.emit('next')
+      } else {
+        proxy.$message({
+          message: '請先登入在結帳喔',
+          type: 'error',
+          showClose: true,
+          duration: 1000
+        })
+      }
     }
     const total = computed(() => {
       return store.getters.getTotal
@@ -61,73 +74,9 @@ export default defineComponent({
   }
 });
 </script>
-<style lang="scss" scoped>
+<style scoped>
 img {
-  width: 60px;
-  height: 100%;
-}
-.item-body {
-  align-items: center;
-  border-radius: 3px;
-  border: 1px solid rgb(158, 156, 156);
-  margin: 15px auto;
-  text-align: center;
-  div {
-    width: 16%;
-  }
-  .product-detail {
-    display: flex;
-    width: 50%;
-    font-size: 15px;
-    align-items: center;
-    img {
-      margin-right: 15px;
-    }
-  }
-  .amount {
-    background: white;
-    .countinput {
-      width: 50%;
-      margin: 0 auto;
-      text-align: center;
-
-      div {
-        width: 20px;
-        cursor: pointer;
-      }
-      .min {
-        border-right: 1px solid black;
-      }
-      .plus {
-        border-left: 1px solid black;
-      }
-    }
-  }
-  .operate {
-    i {
-      cursor: pointer;
-    }
-  }
-}
-.total {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  line-height: 30px;
-  .counts {
-    font-size: 18px;
-  }
-  button {
-    margin-left: 15px;
-    background-color: #212529;
-    color: white;
-    width: 15%;
-    font-weight: bold;
-    a:visited {
-      color: white;
-    }
-  }
+  width: 100px;
 }
 </style>
 <style >

@@ -1,0 +1,23 @@
+.category {
+  nav {
+    width: 100%;
+    display: flex;
+    border-bottom: rgb(158, 156, 156) 1px solid;
+    justify-content: space-around;
+    margin: 15px auto;
+
+    li {
+      list-style: none;
+      cursor: pointer;
+      padding-left: 10px;
+      line-height: 30px;
+      text-align: center;
+      margin: 10px 0px;
+      height: 30px;
+    }
+
+    li:hover {
+      border-bottom: 1px red solid;
+    }
+  }
+}
