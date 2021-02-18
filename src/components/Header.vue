@@ -1,82 +1,31 @@
 <template>
-  <nav class="navheader navbar navbar-expand-lg navbar-light bg-light">
-    <router-link to="/">TOMSESHOP</router-link>
-    <button
-      class="navbar-toggler"
-      ref="toggleButton"
-      id="toggleButton"
-      type="button"
-      @click.prevent="toggleRwdOpen"
-      data-toggle="collapse"
-      data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div
-      class="collapse navbar-collapse"
-      :class="{displayBlock:rwdOpen}"
-      id="navbarSupportedContent"
-    >
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">
-            <span class="sr-only">(current)</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#"></a>
-        </li>
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            id="navbarDropdown"
-            role="button"
-            @click="toggleOpen"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >Dropdown</a>
-          <div
-            class="dropdown-menu"
-            id="dropdown-menu"
-            :style="{display:'block'}"
-            v-if="isOpen"
-            aria-labelledby="navbarDropdown"
-          >
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-        </li>
-      </ul>
-      <div class="nav-right">
-        <router-link v-if="user.name" :to="`/MyOrder/${user.uid}`">我的訂單</router-link>
-        <el-badge :value="buyCartAmount" class="badge">
-          <router-link to="/BuyCart">
-            <i class="el-icon-shopping-cart-1"></i>
-          </router-link>
-        </el-badge>
-        <span v-if="user.isLogin" class="login-out" @click="handleLogout">登出</span>
-        <span v-else class="login-out" @click="handleDialog">登入</span>
-        <span>
-          <router-link to="/signUp">註冊</router-link>
-        </span>
+  <header class="globalheader">
+    <div class="header-left">
+      <div class="logo">
+        <router-link to="/">TOMSESHOP</router-link>
       </div>
     </div>
-  </nav>
-  <diaogModel :destroy-on-close="true" :append-to-body="true" title="Login" ref="dialog">
-    <login-dailog :close="close">
-      <button @click="close" type="submit" class="btn btn-primary">送出</button>
-    </login-dailog>
-  </diaogModel>
+    <div class="header-right">
+      <el-badge :value="buyCartAmount" type="danger">
+        <router-link to="/BuyCart">
+          <i class="el-icon-shopping-cart-1"></i>
+        </router-link>
+      </el-badge>
+      <div class="rwd-toggle" ref="rwd" :class="{hide:isHide}">
+        <a>關於我們</a>
+        <router-link :to="`/MyOrder/${user.uid}`" v-if="user.name">我的訂單</router-link>
+        <router-link to="/signUp" v-if="!user.name">註冊</router-link>
+        <a @click="handleDialog" v-if="!user.name">登入</a>
+        <a @click="handleLogout" v-if="user.name">登出</a>
+      </div>
+      <img ref="toggle" class="toggle" @click="toggleMenu" src="../assets/menu.svg" alt />
+    </div>
+    <diaogModel :destroy-on-close="true" :append-to-body="true" title="Login" ref="dialog">
+      <login-dailog :close="close">
+        <button @click="close" type="submit" class="btn btn-primary">送出</button>
+      </login-dailog>
+    </diaogModel>
+  </header>
 </template>
 <script>
 import { computed, defineComponent, ref } from 'vue'
@@ -93,13 +42,19 @@ export default defineComponent({
     loginDailog
   },
   setup (props) {
+    const isHide = ref(true)
     const router = useRouter()
     const store = useStore()
-    const toggleButton = ref(null)
-    const isOpen = ref(false)
     const dialog = ref(null)
-    const rwdOpen = ref(false)
+    const rwd = ref(null)
+    const toggle = ref(null)
     const buyCartAmount = computed(() => { return store.state.buyCartAmount })
+    const cart = JSON.parse(localStorage.getItem('cart')) || []
+    const BuyCartAmount = ref(0)
+    cart.forEach((item) => {
+      BuyCartAmount.value += item.amount
+    })
+    store.commit('handleBuyCartAmount', BuyCartAmount.value)
     const handleLogout = () => {
       store.commit('logout')
       router.push('/')
@@ -110,34 +65,80 @@ export default defineComponent({
     const close = () => {
       dialog.value.close()
     }
-    const toggleOpen = () => {
-      isOpen.value = !isOpen.value
+    const toggleMenu = () => {
+      isHide.value = !isHide.value
     }
-    const toggleRwdOpen = () => {
-      console.log(rwdOpen.value)
-      rwdOpen.value = !rwdOpen.value
+    // clickout
+    document.body.addEventListener('click', (e) => {
+      if (rwd.value) {
+        if (!rwd.value.contains(e.target) && isHide.value === false && !toggle.value.contains(e.target)) {
+          isHide.value = true
+        } else if (rwd.value.contains(e.target)) {
+          isHide.value = true
+        }
+      }
     }
+    )
     return {
-      isOpen,
-      toggleOpen,
-      rwdOpen,
-      toggleButton,
-      toggleRwdOpen,
       dialog,
       handleDialog,
       handleLogout,
       buyCartAmount,
-      close
+      close,
+      isHide,
+      toggleMenu,
+      rwd,
+      toggle
     }
   }
 });
 </script>
 <style scoped lang="scss">
-.displayBlock {
-  display: block;
+.rwd-toggle.hide {
+  @media (max-width: 768px) {
+    height: 0;
+    border: 0px solid transparent;
+  }
+}
+.rwd-toggle {
+  input {
+    border-radius: 30px;
+  }
+  @media (max-width: 768px) {
+    overflow: hidden;
+    transition: height 0.3s;
+    border: 1px solid rgb(75, 74, 74);
+    border-radius: 3px;
+    width: 300px;
+    background: rgb(255, 255, 255);
+    position: absolute;
+    z-index: 999;
+    bottom: -100px;
+  }
+  a {
+    cursor: pointer;
+    padding: 0px 10px;
+    @media (max-width: 768px) {
+      margin: 10px 0px;
+      display: block;
+      color: black;
+      &:hover {
+        color: red;
+      }
+    }
+  }
 }
 </style>
-<style>
+<style lang="scss">
+.el-icon-shopping-cart-1 {
+  color: white;
+  font-size: 20px;
+  text-align: right;
+  margin-right: 15px;
+  @media (max-width: 768px) {
+    margin-right: 0px;
+  }
+}
 .el-overlay {
   position: absolute;
   top: 0%;

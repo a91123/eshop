@@ -18,27 +18,20 @@ const store = createStore({
     user: { isLogin: false },
     error: { status: false },
     token: localStorage.getItem('token') || '',
-    buyCartAmount: JSON.parse(localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')).length : ''
+    buyCartAmount: 0
   },
   mutations: {
     setError (state, e) {
       state.error = e
     },
-    handleDialogTableVisible (state, status) {
-      state.dialogTableVisible = status
+    // handleDialogTableVisible (state, status) {
+    //   state.dialogTableVisible = status
+    // },
+    getSearch (state, data) {
+      state.ProductList = data
     },
     getProductList (state, data) {
       state.ProductList = data
-    },
-    getProductCategory (state, category) {
-      if (category !== 0) {
-        const categoryProduct = state.ProductList.filter((item) => {
-          return item.category === category
-        })
-        state.categoryProduct = categoryProduct
-      } else {
-        state.categoryProduct = state.ProductList
-      }
     },
     getUserLogin (state, data) {
       const token = data.token
@@ -46,11 +39,17 @@ const store = createStore({
       localStorage.setItem('token', token)
       axios.defaults.headers.common.authorization = token
     },
+    DelCart (state, cart) {
+      state.ProductCart = cart
+    },
     getDetailList (state, data) {
       state.DetailList = data[0]
     },
-    handleBuyCartAmount (state) {
-      state.buyCartAmount = ''
+    handleBuyCartAmount (state, amount) {
+      state.buyCartAmount += amount
+      if (amount === 0) {
+        state.buyCartAmount = ''
+      }
     },
     getProductCart (state) {
       const cart = JSON.parse(localStorage.getItem('cart')) || []
@@ -68,23 +67,19 @@ const store = createStore({
       }
       state.ProductCart = newMycartDisplay
       localStorage.setItem('cart', JSON.stringify(state.ProductCart))
-      state.buyCartAmount = state.ProductCart.length
-    },
-    handleAmount (state, payload) {
-      const { amount, index } = payload
-      state.ProductCart[index].amount = amount
-      localStorage.setItem('cart', JSON.stringify(state.ProductCart))
-      if (state.ProductCart[index].amount < 1) {
-        state.ProductCart.splice(index, 1)
-        localStorage.setItem('cart', JSON.stringify(state.ProductCart))
-        state.buyCartAmount = state.ProductCart.length
-      }
+      // state.buyCartAmount = state.ProductCart.length
+      let sum = 0
+      state.ProductCart.forEach((item) => {
+        sum += item.amount
+        state.buyCartAmount = sum
+      })
     },
     fetchCurrentUser (state, data) {
       state.user = { isLogin: true, ...data }
     },
     logout (state) {
       state.user = { isLogin: false }
+      state.token = ''
       localStorage.removeItem('token')
       delete axios.defaults.headers.common.authorization
     }

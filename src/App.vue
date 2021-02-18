@@ -23,6 +23,7 @@ export default defineComponent({
     const Height = ref(0)
     // const token = computed(() => { return store.state.token })
     const currentUser = computed(() => { return store.state.user })
+    // console.log(currentUser)
     onMounted(() => {
       // 解決foot 內容不夠撐開的問題 class down = 讓down minheight = 最少等於整個body - (footer + header高度 -down的整體下降70)
       Height.value = document.body.clientHeight - 50
@@ -53,9 +54,4 @@ export default defineComponent({
 
 <style lang="scss">
 @import "./assets/scss/component/all.scss";
-</style>
-<style scoped>
-.down {
-  padding-top: 70px;
-}
 </style>

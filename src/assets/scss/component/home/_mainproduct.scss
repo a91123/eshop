@@ -1,14 +1,26 @@
+@keyframes product-img {
+  0% {
+    top: -30px;
+  }
+  100% {
+    top: 0;
+  }
+}
 .product {
   margin: 10px 0px;
 
   .card {
     width: 18rem;
     margin: 0 auto;
-
     .image-container {
       overflow: hidden;
-
       img {
+        &:hover {
+          opacity: 0.5;
+        }
+        position: relative;
+        animation-name: product-img;
+        animation-duration: 0.2s;
         max-height: 350px;
         object-fit: cover;
         transform: scale(1, 1);
@@ -31,8 +43,11 @@
   }
 
   .link-style {
+    display: flex;
     background-color: rgb(76, 74, 83);
     color: whitesmoke;
     font-weight: bold;
+    justify-content: center;
+    align-items: center;
   }
 }

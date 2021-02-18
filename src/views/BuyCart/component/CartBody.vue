@@ -9,9 +9,10 @@
     <div class="price">{{item.price}}</div>
     <div class="amount">
       <div class="countinput" :class="active===0 ? 'borders' : '' ">
-        <div class="min" v-if="!order" @click="handleMin(item,index)">-</div>
-        {{item.amount}}
-        <div class="plus" v-if="!order" @click="handlePlus(item,index)">+</div>
+        <div class="min" v-if="!order" @click="handleAmount(item,index,-1)">-</div>
+        <span class="count-number">{{item.amount}}</span>
+
+        <div class="plus" v-if="!order" @click="handleAmount(item,index,1)">+</div>
       </div>
     </div>
     <div class="operate" v-if="!order" @click="delProduct(index)">
@@ -31,15 +32,23 @@ export default defineComponent({
   props: ['active', 'order'],
   setup (props, context) {
     const { proxy } = getCurrentInstance()
-    const myCart = computed(() => { return store.state.ProductCart })
+    const myCart = computed(() => {
+      return store.state.ProductCart
+    })
     const store = useStore()
-    const handlePlus = (item, index) => {
-      item.amount += 1
-      store.commit('handleAmount', { amount: item.amount, index })
+    const cart = JSON.parse(localStorage.getItem('cart'))
+    const handleAmount = (item, index, count) => {
+      item.amount += count
+      cart[index].amount = item.amount
+      if (item.amount < 1) {
+        cart.splice(index, 1)
+        store.commit('DelCart', cart)
+      }
+      localStorage.setItem('cart', JSON.stringify(cart))
+      store.commit('handleBuyCartAmount', count)
     }
     const handleNext = () => {
       const user = store.state.user
-      console.log(typeof user.isLogin, user.isLogin === true)
       if (user.isLogin === true) {
         context.emit('next')
       } else {
@@ -54,18 +63,13 @@ export default defineComponent({
     const total = computed(() => {
       return store.getters.getTotal
     })
-    const handleMin = (item, index) => {
-      item.amount -= 1
-      store.commit('handleAmount', { amount: item.amount, index })
-    }
     const delProduct = (index) => {
       myCart.value.splice(index, 1)
       localStorage.setItem('cart', JSON.stringify(myCart.value))
       store.state.buyCartAmount = myCart.value.length
     }
     return {
-      handlePlus,
-      handleMin,
+      handleAmount,
       delProduct,
       myCart,
       total,

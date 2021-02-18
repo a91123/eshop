@@ -4,3 +4,17 @@
 .main-product {
   margin: 20px 0px;
 }
+.search {
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
+  display: flex;
+  justify-content: flex-end;
+  align-content: center;
+  height: 30px;
+  line-height: 30px;
+  input {
+    outline: none;
+    border-radius: 5px;
+  }
+}

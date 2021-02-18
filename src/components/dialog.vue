@@ -20,7 +20,6 @@ export default defineComponent({
     width: String
   },
   setup (props, context) {
-    // const store = useStore()
     const dialogWidth = ref('500px')
     const dialogTableVisible = ref(false)
     const close = () => {
@@ -57,7 +56,7 @@ export default defineComponent({
 <style scoped>
 .dialog {
   position: fixed;
-  top: -50px;
+  top: 10%;
   z-index: 99;
   width: 100%;
 }

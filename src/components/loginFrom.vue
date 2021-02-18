@@ -53,7 +53,7 @@ export default defineComponent({
     }
     const onSubmit = handleSubmit(() => {
       store.dispatch('getUserLogin', { email: email.value, password: password.value }).then(res => {
-        store.commit('handleDialogTableVisible', false)
+        // store.commit('handleDialogTableVisible', false)
         proxy.$message({
           message: '登入成功',
           type: 'success',

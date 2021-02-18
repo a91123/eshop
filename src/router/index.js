@@ -63,7 +63,9 @@ router.beforeEach((to, from, next) => {
           next()
         }
       }).catch(e => {
+        store.state.error.status = true
         store.commit('logout')
+        next()
       })
     } else {
       if (requiredLogin) {

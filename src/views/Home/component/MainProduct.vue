@@ -1,11 +1,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <div
-        class="col-md-6 col-lg-4 product col-sm-6 col-xs-12"
-        v-for="(item,index) in list"
-        :key="index"
-      >
+      <div class="col-lg-4 product col-md-6 col-12" v-for="(item,index) in list" :key="index">
         <div class="card">
           <div class="image-container">
             <img :src="item.image" class="card-img-top" />

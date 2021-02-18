@@ -66,7 +66,7 @@
   <slot v-if="user"></slot>
 </template>
 <script>
-import { defineComponent, ref, getCurrentInstance, onMounted } from 'vue'
+import { defineComponent, ref, getCurrentInstance } from 'vue'
 import { Field, Form, useForm } from 'vee-validate'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
@@ -97,7 +97,7 @@ export default defineComponent({
         phone: phone.value,
         address: address.value
       }
-      axios.post('/user', payload).then((res) => { console.log(res) }).then(() => {
+      axios.post('/user', payload).then(() => {
         proxy.$message({
           message: '註冊成功',
           type: 'success',
@@ -139,9 +139,6 @@ export default defineComponent({
       }
       return true
     }
-    onMounted(() => {
-      console.log(props.user)
-    })
     return {
       isEmailRules,
       isPasswordLength,

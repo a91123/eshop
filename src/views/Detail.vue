@@ -44,7 +44,7 @@
   </div>
 </template>
 <script>
-import { defineComponent, computed, ref, getCurrentInstance } from 'vue'
+import { defineComponent, computed, ref, getCurrentInstance, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 export default defineComponent({
@@ -54,7 +54,9 @@ export default defineComponent({
     const size = ref()
     const isDisable = ref(true)
     const cart = JSON.parse(localStorage.getItem('cart'))
-    const buyList = [{}]
+    const buyList = {}
+    const newCart = ref([])
+    const mycart = []
     const route = useRoute()
     const router = useRouter()
     const store = useStore()
@@ -68,7 +70,6 @@ export default defineComponent({
       value: 'L',
       label: 'L'
     }])
-    console.log(size.value)
     const handlePlus = () => {
       count.value += 1
     }
@@ -85,23 +86,27 @@ export default defineComponent({
       })
     }
     const setItemToBuycart = () => {
-      buyList[0].item = list.value.title
-      buyList[0].price = list.value.price
-      buyList[0].image = list.value.image
-      buyList[0].amount = count.value
-      buyList[0].id = list.value.id
-      buyList[0].size = size.value
-      console.log(buyList)
-      let newCart = []
-      if (cart) {
-        newCart = [...cart, ...buyList]
+      buyList.item = list.value.title
+      buyList.price = list.value.price
+      buyList.image = list.value.image
+      buyList.amount = count.value
+      buyList.id = list.value.id
+      buyList.size = size.value
+      if (cart && cart.length > 0) {
+        const newiten = { ...buyList }
+        mycart.push(newiten)
+        newCart.value = [...cart, ...mycart]
       } else {
-        newCart = buyList
+        const newiten = { ...buyList }
+        newCart.value.push(newiten)
       }
-      localStorage.setItem('cart', JSON.stringify(newCart))
+      localStorage.setItem('cart', JSON.stringify(newCart.value))
       store.commit('getProductCart')
       open()
     }
+    onMounted(() => {
+      window.scrollTo(0, 0)
+    })
     const handleRouter = () => {
       router.push('/BuyCart')
     }
@@ -113,7 +118,6 @@ export default defineComponent({
     const list = computed(() => {
       return store.state.DetailList
     })
-    console.log(list)
     return {
       list,
       count,

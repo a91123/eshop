@@ -51,7 +51,6 @@ export default defineComponent({
       console.log(active.value)
     }
     const sendOrder = () => {
-      // active.value++
       const payload = [JSON.stringify({ cart: cart.value, total: store.getters.getTotal }), { orderPayload }]
       console.log(store.getters.getTotal)
       axios.post('order', payload).then((res) => {
@@ -62,7 +61,8 @@ export default defineComponent({
           duration: 1000
         })
         localStorage.removeItem('cart')
-        store.commit('handleBuyCartAmount')
+        store.commit('DelCart', [])
+        store.state.buyCartAmount = ''
         router.push('/')
       })
       console.log([{ cart: cart.value, total: store.getters.getTotal }, { orderPayload }])
