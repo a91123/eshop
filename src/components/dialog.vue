@@ -56,11 +56,8 @@ export default defineComponent({
 <style lang="scss" scoped>
 .dialog {
   position: fixed;
-  top: 10%;
+  top: -50px;
   z-index: 99;
   width: 100%;
-  @media (max-width: 768px) {
-    top: -50px;
-  }
 }
 </style>

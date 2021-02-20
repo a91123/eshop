@@ -2,7 +2,7 @@
   <header class="globalheader">
     <div class="header-left">
       <div class="logo">
-        <router-link to="/">TOMSESHOP</router-link>
+        <router-link class="a-link" to="/">TOMSESHOP</router-link>
       </div>
     </div>
     <div class="header-right">
