@@ -1,6 +1,6 @@
 <template>
   <div class="container main">
-    <div class="row detail-container">
+    <div class="detail-container d-flex">
       <div class="col-md-12 col-lg-6 image-container">
         <img :src="list && list.image" alt />
       </div>
