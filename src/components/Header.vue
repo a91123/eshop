@@ -12,11 +12,11 @@
         </router-link>
       </el-badge>
       <div class="rwd-toggle" ref="rwd" :class="{hide:isHide}">
-        <a>關於我們</a>
+        <a class="a-link">關於我們</a>
         <router-link :to="`/MyOrder/${user.uid}`" v-if="user.name">我的訂單</router-link>
         <router-link to="/signUp" v-if="!user.name">註冊</router-link>
-        <a @click="handleDialog" v-if="!user.name">登入</a>
-        <a @click="handleLogout" v-if="user.name">登出</a>
+        <a class="a-link" @click="handleDialog" v-if="!user.name">登入</a>
+        <a class="a-link" @click="handleLogout" v-if="user.name">登出</a>
       </div>
       <img ref="toggle" class="toggle" @click="toggleMenu" src="../assets/menu.svg" alt />
     </div>
@@ -115,7 +115,7 @@ export default defineComponent({
     z-index: 999;
     bottom: -100px;
   }
-  a {
+  .a-link {
     cursor: pointer;
     padding: 0px 10px;
     @media (max-width: 768px) {
