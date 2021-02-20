@@ -18,7 +18,7 @@ import store from './store'
 //   loading.close()
 // }
 
-axios.defaults.baseURL = 'http://localhost:3000/'// 默認的網址
+axios.defaults.baseURL = 'https://tomshop2021.herokuapp.com/'// 默認的網址
 // axios攔截器 每次發req就觸發
 
 axios.interceptors.request.use((config) => {
