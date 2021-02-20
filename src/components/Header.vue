@@ -13,8 +13,8 @@
       </el-badge>
       <div class="rwd-toggle" ref="rwd" :class="{hide:isHide}">
         <a class="a-link">關於我們</a>
-        <router-link :to="`/MyOrder/${user.uid}`" v-if="user.name">我的訂單</router-link>
-        <router-link to="/signUp" v-if="!user.name">註冊</router-link>
+        <router-link class="a-link" :to="`/MyOrder/${user.uid}`" v-if="user.name">我的訂單</router-link>
+        <router-link class="a-link" to="/signUp" v-if="!user.name">註冊</router-link>
         <a class="a-link" @click="handleDialog" v-if="!user.name">登入</a>
         <a class="a-link" @click="handleLogout" v-if="user.name">登出</a>
       </div>
