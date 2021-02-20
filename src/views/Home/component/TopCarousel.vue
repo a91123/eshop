@@ -24,9 +24,9 @@ export default defineComponent({
   },
   setup () {
     const Product = ref([
-      'http://localhost:3000/p360.jpg',
-      'http://localhost:3000/p320.jpg',
-      'http://localhost:3000/p34.jpg'
+      ' https://tomshop2021.herokuapp.com//p360.jpg',
+      ' https://tomshop2021.herokuapp.com//p320.jpg',
+      ' https://tomshop2021.herokuapp.com//p34.jpg'
     ])
     const swiperoptions = reactive({
       autoplay: {
