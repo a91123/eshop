@@ -1,10 +1,10 @@
 <template>
   <div class="container main">
     <div class="row detail-container">
-      <div class="col-md-12 col-lg-5 image-container">
+      <div class="col-md-12 col-lg-6 image-container">
         <img :src="list && list.image" alt />
       </div>
-      <div class="col-md-12 col-lg-7 right-detail">
+      <div class="col-md-12 col-lg-6 right-detail">
         <h2 class="product-title">{{ list.title }}</h2>
         <div class="descript">{{ list.descript }}</div>
         <div class="price">
