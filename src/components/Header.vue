@@ -100,34 +100,6 @@ export default defineComponent({
     border: 0px solid transparent;
   }
 }
-.rwd-toggle {
-  input {
-    border-radius: 30px;
-  }
-  @media (max-width: 768px) {
-    overflow: hidden;
-    transition: height 0.3s;
-    border: 1px solid rgb(75, 74, 74);
-    border-radius: 3px;
-    width: 300px;
-    background: rgb(255, 255, 255);
-    position: absolute;
-    z-index: 999;
-    bottom: -100px;
-  }
-  .a-link {
-    cursor: pointer;
-    padding: 0px 10px;
-    @media (max-width: 768px) {
-      margin: 10px 0px;
-      display: block;
-      color: black;
-      &:hover {
-        color: red;
-      }
-    }
-  }
-}
 </style>
 <style lang="scss">
 .el-icon-shopping-cart-1 {
