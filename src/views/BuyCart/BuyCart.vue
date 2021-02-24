@@ -10,7 +10,7 @@
   <order-detail v-if="active===2"></order-detail>
   <div class="paymentButton">
     <button v-if="active!==0 && active<3" @click="pre">上一步</button>
-    <button v-if="active===1" @click="checkOrder">確認個人資料</button>
+    <button v-if="active===1" @click="checkOrder">確認</button>
     <button v-if="active===2" @click="sendOrder">送出訂單</button>
   </div>
 </template>

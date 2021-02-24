@@ -3,11 +3,10 @@
 .paymentButton {
   display: flex;
   justify-content: center;
-
   button {
     @media (max-width: 992px) {
-      width: 150px;
-      height: 40px;
+      width: 120px;
+      height: 30px;
     }
     margin: 15px auto;
     background-color: #343a40;

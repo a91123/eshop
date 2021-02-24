@@ -12,6 +12,7 @@ const store = createStore({
   state: {
     ProductList: [],
     DetailList: [],
+    wishList: JSON.parse(localStorage.getItem('wishList')) || [],
     dialogTableVisible: false,
     ProductCart: localStorage.getItem('cart') || [],
     categoryProduct: [],
@@ -24,9 +25,6 @@ const store = createStore({
     setError (state, e) {
       state.error = e
     },
-    // handleDialogTableVisible (state, status) {
-    //   state.dialogTableVisible = status
-    // },
     getSearch (state, data) {
       state.ProductList = data
     },
@@ -38,6 +36,16 @@ const store = createStore({
       state.token = data.token
       localStorage.setItem('token', token)
       axios.defaults.headers.common.authorization = token
+    },
+    wishList (state, id) {
+      console.log(state.wishList)
+      if (state.wishList.includes(id)) {
+        state.wishList.splice(state.wishList.indexOf(id), 1);
+        localStorage.setItem('wishList', JSON.stringify(state.wishList));
+      } else {
+        state.wishList.push(id);
+        localStorage.setItem('wishList', JSON.stringify(state.wishList));
+      }
     },
     DelCart (state, cart) {
       state.ProductCart = cart

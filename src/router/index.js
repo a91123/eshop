@@ -4,6 +4,7 @@ import Detail from '@/views/Detail.vue'
 import BuyCart from '@/views/BuyCart/BuyCart.vue'
 import singUp from '../views/signUp/signUp.vue'
 import MyOrder from '@/views/MyOrder.vue'
+import WishList from '@/views/wishList.vue'
 import store from '@/store'
 import axios from 'axios'
 const routes = [
@@ -22,6 +23,11 @@ const routes = [
     name: 'MyOrder',
     component: MyOrder,
     meta: { requiredLogin: true }
+  },
+  {
+    path: '/wishList',
+    name: 'WishList',
+    component: WishList
   },
   {
     path: '/signUp',
