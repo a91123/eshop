@@ -60,12 +60,23 @@ export default defineComponent({
   },
   setup (props) {
     const card = ref([])
-    var io = new IntersectionObserver(entry => {
+    //   var io = new IntersectionObserver(entry => {
+    //   // 1.建立一個觀察容器
+    //   // 2.foreach每個entry並添加動畫
+    //   entry.forEach(item => {
+    //     if (item.isIntersecting) {
+    //       item.target.classList.add('fade-in')
+    //     }
+    //   })
+    // })
+    const io = new IntersectionObserver(entry => {
       // 1.建立一個觀察容器
       // 2.foreach每個entry並添加動畫
+      // https://medium.com/%E9%BA%A5%E5%85%8B%E7%9A%84%E5%8D%8A%E8%B7%AF%E5%87%BA%E5%AE%B6%E7%AD%86%E8%A8%98/%E8%AA%8D%E8%AD%98-intersection-observer-api-%E5%AF%A6%E4%BD%9C-lazy-loading-%E5%92%8C-infinite-scroll-c8d434ad218c
       entry.forEach(item => {
         if (item.isIntersecting) {
           item.target.classList.add('fade-in')
+          io.unobserve(entry.target)
         }
       })
     })
