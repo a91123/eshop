@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-3 product col-md-6 col-12" v-for="(item,index) in list" :key="index">
-        <div class="card">
+        <div class="card" :ref="setCardRef">
           <div class="image-container">
             <svg
               @click.prevent="handlefav(item.id,index)"
@@ -52,13 +52,31 @@
   </div>
 </template>
 <script>
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
 export default defineComponent({
   props: {
     list: Object
   },
   setup (props) {
+    const card = ref([])
+    var io = new IntersectionObserver(entry => {
+      // 1.建立一個觀察容器
+      // 2.foreach每個entry並添加動畫
+      entry.forEach(item => {
+        if (item.isIntersecting) {
+          item.target.classList.add('fade-in')
+        }
+      })
+    })
+    const setCardRef = (el) => {
+      if (el) {
+        io.observe(el)
+        // vue3官方推薦 ref array方法 // 指定ref為setxxx 再把他push到 陣列中形成ref陣列
+        // 先為每個el監聽一個已經建好的io容器 再把她推入陣列
+        card.value.push(el)
+      }
+    }
     const store = useStore()
     const favSvg = computed(() => {
       return store.state.wishList
@@ -68,8 +86,36 @@ export default defineComponent({
     }
     return {
       handlefav,
-      favSvg
+      favSvg,
+      card,
+      setCardRef
     }
   }
 });
 </script>
+<style scoped>
+@keyframes fadein {
+  0% {
+    top: -20px;
+    opacity: 0.5;
+  }
+  50% {
+    top: -10px;
+    opacity: 0.6;
+  }
+  70% {
+    top: -5px;
+    opacity: 0.8;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation-name: fadein;
+  animation-duration: 0.2s;
+  animation-timing-function: ease-in;
+}
+</style>
